@@ -40,43 +40,12 @@
         html,
         body {
             height: 100%;
+            height: 100dvh;
             font-family: 'Inter', sans-serif;
             background: var(--bg);
             color: var(--text);
             overflow: hidden;
-        }
-
-        /* ===== PHONE WRAPPER ===== */
-        .phone-shell {
-            position: fixed;
-            inset: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #1a1a2e;
-        }
-
-        .phone-frame {
-            width: 390px;
-            height: 844px;
-            background: var(--bg);
-            border-radius: 44px;
-            overflow: hidden;
             position: relative;
-            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.08);
-        }
-
-        /* ===== NOTCH ===== */
-        .notch {
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 120px;
-            height: 34px;
-            background: #1a1a1a;
-            border-radius: 0 0 20px 20px;
-            z-index: 200;
         }
 
         /* ===== TOP APP BAR ===== */
@@ -91,6 +60,7 @@
             display: flex;
             align-items: flex-end;
             padding: 0 20px 14px;
+            padding-top: max(env(safe-area-inset-top, 0px), 36px);
             justify-content: space-between;
         }
 
@@ -621,230 +591,222 @@
 
 <body>
 
-    <div class="phone-shell">
-        <div class="phone-frame">
+    <!-- ===== TOP APP BAR ===== -->
+    <header>
+        <a href="index.html" class="header-back-btn" aria-label="Voltar para Home">
+            <svg viewBox="0 0 24 24">
+                <polyline points="15 18 9 12 15 6" />
+            </svg>
+        </a>
+        <h1 class="header-title">Área Médica</h1>
+        <div class="header-spacer"></div>
+    </header>
 
-            <!-- Notch -->
-            <div class="notch"></div>
+    <!-- ===== TABS ===== -->
+    <div class="tabs-wrap">
+        <div class="tab-pill-container" role="tablist">
+            <button class="tab-btn active" role="tab" aria-selected="true" id="tab-meds" onclick="switchTab('meds')">
+                Medicamentos
+            </button>
+            <button class="tab-btn" role="tab" aria-selected="false" id="tab-exames" onclick="switchTab('exames')">
+                Meus Exames
+            </button>
+        </div>
+    </div>
 
-            <!-- ===== TOP APP BAR ===== -->
-            <header>
-                <a href="index.html" class="header-back-btn" aria-label="Voltar para Home">
-                    <svg viewBox="0 0 24 24">
-                        <polyline points="15 18 9 12 15 6" />
-                    </svg>
-                </a>
-                <h1 class="header-title">Área Médica</h1>
-                <div class="header-spacer"></div>
-            </header>
+    <!-- ===== SCROLLABLE CONTENT ===== -->
+    <main class="main-scroll">
 
-            <!-- ===== TABS ===== -->
-            <div class="tabs-wrap">
-                <div class="tab-pill-container" role="tablist">
-                    <button class="tab-btn active" role="tab" aria-selected="true" id="tab-meds"
-                        onclick="switchTab('meds')">
-                        Medicamentos
-                    </button>
-                    <button class="tab-btn" role="tab" aria-selected="false" id="tab-exames"
-                        onclick="switchTab('exames')">
-                        Meus Exames
-                    </button>
+        <!-- === PANEL 1: MEDICAMENTOS === -->
+        <div class="tab-panel active" id="panel-meds" role="tabpanel">
+
+            <p class="section-title">Checklist de hoje</p>
+
+            <div class="checklist-card">
+                <p class="checklist-header">Hoje — Seg, 03 Mar</p>
+
+                <!-- Item 1: concluído -->
+                <div class="med-item" onclick="toggleCheck(this)">
+                    <div class="med-info">
+                        <p class="med-name done">Ácido Fólico</p>
+                        <p class="med-time done">08:00 AM · 1 comprimido</p>
+                    </div>
+                    <div class="check-icon done" aria-label="Concluído">
+                        <svg viewBox="0 0 24 24" stroke="white" fill="none" stroke-width="3" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12" />
+                        </svg>
+                    </div>
                 </div>
+
+                <!-- Item 2: pendente -->
+                <div class="med-item" onclick="toggleCheck(this)">
+                    <div class="med-info">
+                        <p class="med-name">Sulfato Ferroso</p>
+                        <p class="med-time">Após o almoço · 1 comprimido</p>
+                    </div>
+                    <div class="check-icon pending" aria-label="Pendente">
+                        <svg viewBox="0 0 24 24" stroke="transparent" fill="none" stroke-width="3"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12" />
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Item 3: pendente -->
+                <div class="med-item" onclick="toggleCheck(this)">
+                    <div class="med-info">
+                        <p class="med-name">Vitamina D3</p>
+                        <p class="med-time">Junto ao jantar · 1 cápsula</p>
+                    </div>
+                    <div class="check-icon pending" aria-label="Pendente">
+                        <svg viewBox="0 0 24 24" stroke="transparent" fill="none" stroke-width="3"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12" />
+                        </svg>
+                    </div>
+                </div>
+
             </div>
 
-            <!-- ===== SCROLLABLE CONTENT ===== -->
-            <main class="main-scroll">
+            <!-- Próximos Medicamentos -->
+            <p class="section-title" style="margin-top: 22px;">Próximos</p>
 
-                <!-- === PANEL 1: MEDICAMENTOS === -->
-                <div class="tab-panel active" id="panel-meds" role="tabpanel">
+            <div class="med-upcoming-card">
+                <div class="med-pill-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M10.5 20H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h7" />
+                        <ellipse cx="16.5" cy="15.5" rx="5.5" ry="5.5" transform="rotate(-45 16.5 15.5)" />
+                    </svg>
+                </div>
+                <div class="med-upcoming-info">
+                    <p class="med-upcoming-name">Ômega-3</p>
+                    <p class="med-upcoming-time">Amanhã · 08:00 AM</p>
+                </div>
+                <span class="med-upcoming-badge">Manhã</span>
+            </div>
 
-                    <p class="section-title">Checklist de hoje</p>
+            <div class="med-upcoming-card">
+                <div class="med-pill-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M10.5 20H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h7" />
+                        <ellipse cx="16.5" cy="15.5" rx="5.5" ry="5.5" transform="rotate(-45 16.5 15.5)" />
+                    </svg>
+                </div>
+                <div class="med-upcoming-info">
+                    <p class="med-upcoming-name">Ácido Fólico</p>
+                    <p class="med-upcoming-time">Amanhã · 08:00 AM</p>
+                </div>
+                <span class="med-upcoming-badge">Manhã</span>
+            </div>
 
-                    <div class="checklist-card">
-                        <p class="checklist-header">Hoje — Seg, 03 Mar</p>
+        </div><!-- /panel-meds -->
 
-                        <!-- Item 1: concluído -->
-                        <div class="med-item" onclick="toggleCheck(this)">
-                            <div class="med-info">
-                                <p class="med-name done">Ácido Fólico</p>
-                                <p class="med-time done">08:00 AM · 1 comprimido</p>
-                            </div>
-                            <div class="check-icon done" aria-label="Concluído">
-                                <svg viewBox="0 0 24 24" stroke="white" fill="none" stroke-width="3"
-                                    stroke-linecap="round" stroke-linejoin="round">
-                                    <polyline points="20 6 9 17 4 12" />
-                                </svg>
-                            </div>
-                        </div>
+        <!-- === PANEL 2: EXAMES === -->
+        <div class="tab-panel" id="panel-exames" role="tabpanel">
 
-                        <!-- Item 2: pendente -->
-                        <div class="med-item" onclick="toggleCheck(this)">
-                            <div class="med-info">
-                                <p class="med-name">Sulfato Ferroso</p>
-                                <p class="med-time">Após o almoço · 1 comprimido</p>
-                            </div>
-                            <div class="check-icon pending" aria-label="Pendente">
-                                <svg viewBox="0 0 24 24" stroke="transparent" fill="none" stroke-width="3"
-                                    stroke-linecap="round" stroke-linejoin="round">
-                                    <polyline points="20 6 9 17 4 12" />
-                                </svg>
-                            </div>
-                        </div>
+            <p class="section-title">Resultados disponíveis</p>
 
-                        <!-- Item 3: pendente -->
-                        <div class="med-item" onclick="toggleCheck(this)">
-                            <div class="med-info">
-                                <p class="med-name">Vitamina D3</p>
-                                <p class="med-time">Junto ao jantar · 1 cápsula</p>
-                            </div>
-                            <div class="check-icon pending" aria-label="Pendente">
-                                <svg viewBox="0 0 24 24" stroke="transparent" fill="none" stroke-width="3"
-                                    stroke-linecap="round" stroke-linejoin="round">
-                                    <polyline points="20 6 9 17 4 12" />
-                                </svg>
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <!-- Próximos Medicamentos -->
-                    <p class="section-title" style="margin-top: 22px;">Próximos</p>
-
-                    <div class="med-upcoming-card">
-                        <div class="med-pill-icon">
-                            <svg viewBox="0 0 24 24">
-                                <path d="M10.5 20H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h7" />
-                                <ellipse cx="16.5" cy="15.5" rx="5.5" ry="5.5" transform="rotate(-45 16.5 15.5)" />
-                            </svg>
-                        </div>
-                        <div class="med-upcoming-info">
-                            <p class="med-upcoming-name">Ômega-3</p>
-                            <p class="med-upcoming-time">Amanhã · 08:00 AM</p>
-                        </div>
-                        <span class="med-upcoming-badge">Manhã</span>
-                    </div>
-
-                    <div class="med-upcoming-card">
-                        <div class="med-pill-icon">
-                            <svg viewBox="0 0 24 24">
-                                <path d="M10.5 20H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h7" />
-                                <ellipse cx="16.5" cy="15.5" rx="5.5" ry="5.5" transform="rotate(-45 16.5 15.5)" />
-                            </svg>
-                        </div>
-                        <div class="med-upcoming-info">
-                            <p class="med-upcoming-name">Ácido Fólico</p>
-                            <p class="med-upcoming-time">Amanhã · 08:00 AM</p>
-                        </div>
-                        <span class="med-upcoming-badge">Manhã</span>
-                    </div>
-
-                </div><!-- /panel-meds -->
-
-                <!-- === PANEL 2: EXAMES === -->
-                <div class="tab-panel" id="panel-exames" role="tabpanel">
-
-                    <p class="section-title">Resultados disponíveis</p>
-
-                    <!-- Exame 1: disponível -->
-                    <div class="exam-card">
-                        <div class="exam-icon-wrap green">
-                            <svg viewBox="0 0 24 24">
-                                <!-- Ultrasound / wave icon -->
-                                <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
-                            </svg>
-                        </div>
-                        <div class="exam-info">
-                            <p class="exam-name">Ultrassom Morfológico</p>
-                            <p class="exam-status available">✓ Disponível para download</p>
-                        </div>
-                        <button class="exam-action-btn download" aria-label="Baixar resultado">
-                            <svg viewBox="0 0 24 24">
-                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                                <polyline points="7 10 12 15 17 10" />
-                                <line x1="12" y1="15" x2="12" y2="3" />
-                            </svg>
-                        </button>
-                    </div>
-
-                    <p class="section-title">Agendados</p>
-
-                    <!-- Exame 2: agendado -->
-                    <div class="exam-card">
-                        <div class="exam-icon-wrap peach">
-                            <svg viewBox="0 0 24 24">
-                                <path d="M9 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8z" />
-                                <polyline points="17 3 17 8 12 8" />
-                                <line x1="9" y1="12" x2="15" y2="12" />
-                                <line x1="9" y1="16" x2="15" y2="16" />
-                            </svg>
-                        </div>
-                        <div class="exam-info">
-                            <p class="exam-name">Exame de Sangue (Hemograma)</p>
-                            <p class="exam-status scheduled">📅 Agendado: 15 de Mar</p>
-                        </div>
-                        <button class="exam-action-btn calendar" aria-label="Ver no calendário">
-                            <svg viewBox="0 0 24 24">
-                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-                                <line x1="16" y1="2" x2="16" y2="6" />
-                                <line x1="8" y1="2" x2="8" y2="6" />
-                                <line x1="3" y1="10" x2="21" y2="10" />
-                            </svg>
-                        </button>
-                    </div>
-
-                    <!-- Exame 3: pendente -->
-                    <div class="exam-card">
-                        <div class="exam-icon-wrap green">
-                            <svg viewBox="0 0 24 24">
-                                <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
-                            </svg>
-                        </div>
-                        <div class="exam-info">
-                            <p class="exam-name">Glicemia de Jejum</p>
-                            <p class="exam-status pending">⏳ Aguardando resultado</p>
-                        </div>
-                        <button class="exam-action-btn download" style="opacity:0.4;cursor:default;"
-                            aria-label="Indisponível" disabled>
-                            <svg viewBox="0 0 24 24">
-                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                                <polyline points="7 10 12 15 17 10" />
-                                <line x1="12" y1="15" x2="12" y2="3" />
-                            </svg>
-                        </button>
-                    </div>
-
-                </div><!-- /panel-exames -->
-
-            </main>
-
-            <!-- ===== BOTTOM NAV (2 itens — tela interna: ambos inativos) ===== -->
-            <nav aria-label="Navegação principal">
-
-                <!-- Home -->
-                <a href="index.html" class="nav-item" aria-label="Ir para Home" id="nav-home">
-                    <div class="nav-icon-wrap">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                            <polyline points="9 22 9 12 15 12 15 22" />
-                        </svg>
-                    </div>
-                    <span class="nav-label">Home</span>
-                </a>
-
-                <!-- Perfil -->
-                <button class="nav-item" aria-label="Perfil" id="nav-perfil">
-                    <div class="nav-icon-wrap">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                            <circle cx="12" cy="7" r="4" />
-                        </svg>
-                    </div>
-                    <span class="nav-label">Perfil</span>
+            <!-- Exame 1: disponível -->
+            <div class="exam-card">
+                <div class="exam-icon-wrap green">
+                    <svg viewBox="0 0 24 24">
+                        <!-- Ultrasound / wave icon -->
+                        <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+                    </svg>
+                </div>
+                <div class="exam-info">
+                    <p class="exam-name">Ultrassom Morfológico</p>
+                    <p class="exam-status available">✓ Disponível para download</p>
+                </div>
+                <button class="exam-action-btn download" aria-label="Baixar resultado">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                        <polyline points="7 10 12 15 17 10" />
+                        <line x1="12" y1="15" x2="12" y2="3" />
+                    </svg>
                 </button>
+            </div>
 
-            </nav>
+            <p class="section-title">Agendados</p>
 
-        </div><!-- /phone-frame -->
+            <!-- Exame 2: agendado -->
+            <div class="exam-card">
+                <div class="exam-icon-wrap peach">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M9 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8z" />
+                        <polyline points="17 3 17 8 12 8" />
+                        <line x1="9" y1="12" x2="15" y2="12" />
+                        <line x1="9" y1="16" x2="15" y2="16" />
+                    </svg>
+                </div>
+                <div class="exam-info">
+                    <p class="exam-name">Exame de Sangue (Hemograma)</p>
+                    <p class="exam-status scheduled">📅 Agendado: 15 de Mar</p>
+                </div>
+                <button class="exam-action-btn calendar" aria-label="Ver no calendário">
+                    <svg viewBox="0 0 24 24">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                        <line x1="16" y1="2" x2="16" y2="6" />
+                        <line x1="8" y1="2" x2="8" y2="6" />
+                        <line x1="3" y1="10" x2="21" y2="10" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Exame 3: pendente -->
+            <div class="exam-card">
+                <div class="exam-icon-wrap green">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+                    </svg>
+                </div>
+                <div class="exam-info">
+                    <p class="exam-name">Glicemia de Jejum</p>
+                    <p class="exam-status pending">⏳ Aguardando resultado</p>
+                </div>
+                <button class="exam-action-btn download" style="opacity:0.4;cursor:default;" aria-label="Indisponível"
+                    disabled>
+                    <svg viewBox="0 0 24 24">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                        <polyline points="7 10 12 15 17 10" />
+                        <line x1="12" y1="15" x2="12" y2="3" />
+                    </svg>
+                </button>
+            </div>
+
+        </div><!-- /panel-exames -->
+
+    </main>
+
+    <!-- ===== BOTTOM NAV (2 itens — tela interna: ambos inativos) ===== -->
+    <nav aria-label="Navegação principal">
+
+        <!-- Home -->
+        <a href="index.html" class="nav-item" aria-label="Ir para Home" id="nav-home">
+            <div class="nav-icon-wrap">
+                <svg viewBox="0 0 24 24">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                    <polyline points="9 22 9 12 15 12 15 22" />
+                </svg>
+            </div>
+            <span class="nav-label">Home</span>
+        </a>
+
+        <!-- Perfil -->
+        <button class="nav-item" aria-label="Perfil" id="nav-perfil">
+            <div class="nav-icon-wrap">
+                <svg viewBox="0 0 24 24">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                    <circle cx="12" cy="7" r="4" />
+                </svg>
+            </div>
+            <span class="nav-label">Perfil</span>
+        </button>
+
+    </nav>
+
+    </div><!-- /phone-frame -->
     </div><!-- /phone-shell -->
 
     <script>

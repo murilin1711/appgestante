@@ -30,54 +30,11 @@
         body {
             width: 100%;
             height: 100%;
+            height: 100dvh;
             font-family: 'Inter', sans-serif;
-            background: #1a1a2e;
-            overflow: hidden;
-        }
-
-        /* ── PHONE SHELL ── */
-        .phone-shell {
-            position: fixed;
-            inset: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .phone-frame {
-            width: 390px;
-            height: 844px;
             background: var(--plum);
-            border-radius: 44px;
             overflow: hidden;
             position: relative;
-            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.08);
-            animation: heroIn 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
-        }
-
-        @keyframes heroIn {
-            from {
-                transform: scale(0.88) translateY(30px);
-                opacity: 0;
-            }
-
-            to {
-                transform: scale(1) translateY(0);
-                opacity: 1;
-            }
-        }
-
-        /* ── NOTCH ── */
-        .notch {
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 120px;
-            height: 34px;
-            background: #1a1a1a;
-            border-radius: 0 0 20px 20px;
-            z-index: 300;
         }
 
         /* ── FETAL IMAGE CONTAINER ── */
@@ -143,7 +100,7 @@
             left: 0;
             right: 0;
             z-index: 200;
-            padding: 44px 20px 0;
+            padding: max(env(safe-area-inset-top, 12px), 44px) 20px 0;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -490,93 +447,85 @@
 </head>
 
 <body>
-    <div class="phone-shell">
-        <div class="phone-frame">
+    <!-- ═══ FETAL SCENE ═══ -->
+    <div class="fetus-scene" id="fetusScene">
+        <img class="fetus-bg-image" id="fetusImg" src="assets/feto_realista.png" alt="Visualização do bebê na semana 24"
+            draggable="false" />
+        <!-- Uterine lighting overlays -->
+        <div class="uterine-overlay"></div>
+        <div class="warm-glow"></div>
+        <!-- Drag/pinch capture layer -->
+        <div class="drag-hint" id="dragLayer"></div>
+    </div>
 
-            <!-- Notch -->
-            <div class="notch"></div>
+    <!-- ═══ FLOATING HEADER ═══ -->
+    <div class="float-header">
+        <a href="index.html" class="back-btn" aria-label="Voltar">
+            <svg viewBox="0 0 24 24">
+                <polyline points="15 18 9 12 15 6" />
+            </svg>
+        </a>
+        <span class="week-label">Semana 24 🫀</span>
+        <div class="header-spacer"></div>
+    </div>
 
-            <!-- ═══ FETAL SCENE ═══ -->
-            <div class="fetus-scene" id="fetusScene">
-                <img class="fetus-bg-image" id="fetusImg" src="assets/feto_realista.png"
-                    alt="Visualização do bebê na semana 24" draggable="false" />
-                <!-- Uterine lighting overlays -->
-                <div class="uterine-overlay"></div>
-                <div class="warm-glow"></div>
-                <!-- Drag/pinch capture layer -->
-                <div class="drag-hint" id="dragLayer"></div>
-            </div>
+    <!-- ═══ HOTSPOTS ═══ -->
+    <div class="hotspot" id="hs-cerebro" onclick="showInfo('cerebro')" tabindex="0" role="button" aria-label="Cérebro">
+        <div class="hotspot-dot"></div>
+        <span class="hotspot-label">Cérebro</span>
+    </div>
 
-            <!-- ═══ FLOATING HEADER ═══ -->
-            <div class="float-header">
-                <a href="index.html" class="back-btn" aria-label="Voltar">
-                    <svg viewBox="0 0 24 24">
-                        <polyline points="15 18 9 12 15 6" />
-                    </svg>
-                </a>
-                <span class="week-label">Semana 24 🫀</span>
-                <div class="header-spacer"></div>
-            </div>
+    <div class="hotspot" id="hs-coracao" onclick="showInfo('coracao')" tabindex="0" role="button" aria-label="Coração">
+        <div class="hotspot-dot"></div>
+        <span class="hotspot-label">Coração</span>
+    </div>
 
-            <!-- ═══ HOTSPOTS ═══ -->
-            <div class="hotspot" id="hs-cerebro" onclick="showInfo('cerebro')" tabindex="0" role="button"
-                aria-label="Cérebro">
-                <div class="hotspot-dot"></div>
-                <span class="hotspot-label">Cérebro</span>
-            </div>
+    <div class="hotspot" id="hs-mao" onclick="showInfo('mao')" tabindex="0" role="button" aria-label="Mãozinha">
+        <div class="hotspot-dot"></div>
+        <span class="hotspot-label">Mãozinha</span>
+    </div>
 
-            <div class="hotspot" id="hs-coracao" onclick="showInfo('coracao')" tabindex="0" role="button"
-                aria-label="Coração">
-                <div class="hotspot-dot"></div>
-                <span class="hotspot-label">Coração</span>
-            </div>
-
-            <div class="hotspot" id="hs-mao" onclick="showInfo('mao')" tabindex="0" role="button" aria-label="Mãozinha">
-                <div class="hotspot-dot"></div>
-                <span class="hotspot-label">Mãozinha</span>
-            </div>
-
-            <!-- ═══ INFO CARD ═══ -->
-            <div class="info-card" id="infoCard" role="dialog" aria-modal="true" aria-live="polite">
-                <button class="info-card-close" onclick="closeInfo()" aria-label="Fechar">
-                    <svg viewBox="0 0 24 24">
-                        <line x1="18" y1="6" x2="6" y2="18" />
-                        <line x1="6" y1="6" x2="18" y2="18" />
-                    </svg>
-                </button>
-                <div class="info-card-row1">
-                    <span class="info-card-emoji" id="infoIcon">🧠</span>
-                    <p class="info-card-title" id="infoTitle">Foco: Desenvolvimento Cerebral</p>
-                </div>
-                <p class="info-card-text" id="infoText">
-                    O córtex cerebral está se formando ativamente. Os neurônios fazem até 250 mil novas conexões por
-                    minuto. A mielinização começa nesta fase.
-                </p>
-                <span class="info-card-badge">Semana 24 · Em desenvolvimento</span>
-            </div>
-
-            <!-- ═══ ZOOM CONTROLS ═══ -->
-            <div class="zoom-controls">
-                <button class="zoom-btn" onclick="zoom(0.15)" aria-label="Aproximar">+</button>
-                <button class="zoom-btn" onclick="zoom(-0.15)" aria-label="Afastar">−</button>
-            </div>
-
-            <!-- ═══ HINT ═══ -->
-            <div class="rotate-hint">
-                🔍 Pinça para zoom · Arraste para mover
-            </div>
-
-            <!-- ═══ GESTATIONAL CARD ═══ -->
-            <div class="gest-card">
-                <div>
-                    <p class="gest-label">⏳ Cálculo Gestacional</p>
-                    <p class="gest-main">Faltam 100 dias!</p>
-                    <p class="gest-sub">Previsão de parto: 12 de junho de 2025</p>
-                </div>
-                <span class="gest-emoji">🍼</span>
-            </div>
-
+    <!-- ═══ INFO CARD ═══ -->
+    <div class="info-card" id="infoCard" role="dialog" aria-modal="true" aria-live="polite">
+        <button class="info-card-close" onclick="closeInfo()" aria-label="Fechar">
+            <svg viewBox="0 0 24 24">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+        </button>
+        <div class="info-card-row1">
+            <span class="info-card-emoji" id="infoIcon">🧠</span>
+            <p class="info-card-title" id="infoTitle">Foco: Desenvolvimento Cerebral</p>
         </div>
+        <p class="info-card-text" id="infoText">
+            O córtex cerebral está se formando ativamente. Os neurônios fazem até 250 mil novas conexões por
+            minuto. A mielinização começa nesta fase.
+        </p>
+        <span class="info-card-badge">Semana 24 · Em desenvolvimento</span>
+    </div>
+
+    <!-- ═══ ZOOM CONTROLS ═══ -->
+    <div class="zoom-controls">
+        <button class="zoom-btn" onclick="zoom(0.15)" aria-label="Aproximar">+</button>
+        <button class="zoom-btn" onclick="zoom(-0.15)" aria-label="Afastar">−</button>
+    </div>
+
+    <!-- ═══ HINT ═══ -->
+    <div class="rotate-hint">
+        🔍 Pinça para zoom · Arraste para mover
+    </div>
+
+    <!-- ═══ GESTATIONAL CARD ═══ -->
+    <div class="gest-card">
+        <div>
+            <p class="gest-label">⏳ Cálculo Gestacional</p>
+            <p class="gest-main">Faltam 100 dias!</p>
+            <p class="gest-sub">Previsão de parto: 12 de junho de 2025</p>
+        </div>
+        <span class="gest-emoji">🍼</span>
+    </div>
+
+    </div>
     </div>
 
     <script>

@@ -40,43 +40,12 @@
         html,
         body {
             height: 100%;
+            height: 100dvh;
             font-family: 'Inter', sans-serif;
             background: var(--bg);
             color: var(--text);
             overflow: hidden;
-        }
-
-        /* ===== PHONE WRAPPER (desktop centering) ===== */
-        .phone-shell {
-            position: fixed;
-            inset: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #1a1a2e;
-        }
-
-        .phone-frame {
-            width: 390px;
-            height: 844px;
-            background: var(--bg);
-            border-radius: 44px;
-            overflow: hidden;
             position: relative;
-            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.08);
-        }
-
-        /* ===== NOTCH ===== */
-        .notch {
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 120px;
-            height: 34px;
-            background: #1a1a1a;
-            border-radius: 0 0 20px 20px;
-            z-index: 200;
         }
 
         /* ===== FIXED HEADER ===== */
@@ -87,7 +56,8 @@
             right: 0;
             z-index: 100;
             background: var(--bg);
-            padding: 44px 24px 14px;
+            padding: env(safe-area-inset-top, 16px) 24px 14px;
+            padding-top: max(env(safe-area-inset-top, 16px), 44px);
         }
 
         .header-top {
@@ -774,206 +744,173 @@
             opacity: 1;
         }
     </style>
+    <script>
+        // Redireciona para onboarding se for a primeira visita
+        if (!localStorage.getItem('onboarded')) {
+            window.location.replace('onboarding.html');
+        }
+    </script>
 </head>
 
 <body>
 
-    <div class="phone-shell">
-        <div class="phone-frame">
+    <!-- ===== FIXED HEADER ===== -->
+    <header>
+        <div class="header-top">
+            <div>
+                <p class="header-greet">Bem-vinda, Maria! 🌿</p>
+                <h1 class="header-week">Semana 24</h1>
+            </div>
+            <img class="avatar" src="assets/avatar_maria.png" alt="Avatar de Maria" />
+        </div>
+        <!-- Progress Bar -->
+        <div class="progress-wrap" role="progressbar" aria-valuenow="24" aria-valuemin="1" aria-valuemax="42"
+            aria-label="Progresso gestacional: semana 24 de 42">
+            <div class="progress-fill"></div>
+        </div>
+    </header>
 
-            <!-- Notch -->
-            <div class="notch"></div>
+    <!-- ===== SCROLLABLE CONTENT ===== -->
+    <main class="main-scroll">
 
-            <!-- ===== FIXED HEADER ===== -->
-            <header>
-                <div class="header-top">
-                    <div>
-                        <p class="header-greet">Bem-vinda, Maria! 🌿</p>
-                        <h1 class="header-week">Semana 24</h1>
-                    </div>
-                    <img class="avatar" src="assets/avatar_maria.png" alt="Avatar de Maria" />
-                </div>
-                <!-- Progress Bar -->
-                <div class="progress-wrap" role="progressbar" aria-valuenow="24" aria-valuemin="1" aria-valuemax="42"
-                    aria-label="Progresso gestacional: semana 24 de 42">
-                    <div class="progress-fill"></div>
-                </div>
-            </header>
+        <!-- === CAROUSEL === -->
+        <section class="carousel-section" aria-label="Card informativo da semana">
+            <div class="carousel-viewport">
+                <div class="carousel-track" id="carouselTrack">
 
-            <!-- ===== SCROLLABLE CONTENT ===== -->
-            <main class="main-scroll">
-
-                <!-- === CAROUSEL === -->
-                <section class="carousel-section" aria-label="Card informativo da semana">
-                    <div class="carousel-viewport">
-                        <div class="carousel-track" id="carouselTrack">
-
-                            <!-- Card 1: Dark 3D Fetus -->
-                            <div class="card card-dark" id="card1">
-                                <div class="card-label">
-                                    <span>Sua Semana</span>
-                                    <strong>Semana 24</strong>
-                                </div>
-                                <!-- BUG4 FIX: botão expandir específico para abrir tela 3D -->
-                                <button onclick="event.stopPropagation(); window.location.href='feto3d.html'"
-                                    aria-label="Ver bebê em 3D tela cheia"
-                                    style="position:absolute;top:14px;right:14px;z-index:20;background:rgba(141,170,145,0.22);border:1.5px solid rgba(141,170,145,0.5);border-radius:99px;padding:5px 12px;display:flex;align-items:center;gap:5px;cursor:pointer;">
-                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#C5D5C8"
-                                        stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                                        <path
-                                            d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" />
-                                    </svg>
-                                    <span style="font-size:9px;font-weight:700;color:#C5D5C8;letter-spacing:0.5px;">VER
-                                        EM 3D</span>
-                                </button>
-                                <img class="fetus-img" src="assets/fetus_3d.png" alt="Bebê na semana 24" />
-                                <!-- Arrow Left - BUG2 FIX: stopPropagation para não abrir 3D -->
-                                <button class="arrow-btn arrow-left" onclick="event.stopPropagation(); changeCard(-1)"
-                                    aria-label="Card anterior">
-                                    <svg viewBox="0 0 24 24" stroke="#8DAA91" fill="none" stroke-width="2.5"
-                                        stroke-linecap="round" stroke-linejoin="round">
-                                        <polyline points="15 18 9 12 15 6" />
-                                    </svg>
-                                </button>
-                                <!-- Arrow Right - BUG2 FIX: stopPropagation -->
-                                <button class="arrow-btn arrow-right" onclick="event.stopPropagation(); changeCard(1)"
-                                    aria-label="Próximo card">
-                                    <svg viewBox="0 0 24 24" stroke="#8DAA91" fill="none" stroke-width="2.5"
-                                        stroke-linecap="round" stroke-linejoin="round">
-                                        <polyline points="9 18 15 12 9 6" />
-                                    </svg>
-                                </button>
-                            </div>
-
-                            <!-- Card 2: White Nutritional -->
-                            <div class="card card-white" id="card2">
-                                <!-- Size comparison -->
-                                <div class="card-section-top">
-                                    <span class="section-label">Comparação de Tamanho</span>
-                                    <span class="size-title">Bebê do tamanho de um abacate 🥑</span>
-                                    <img class="avocado-img" src="assets/avocado.png"
-                                        alt="Abacate representando o tamanho do bebê" />
-                                    <div class="size-tags">
-                                        <span class="size-tag">📏 30 cm</span>
-                                        <span class="size-tag">⚖️ 600 g</span>
-                                    </div>
-                                </div>
-                                <!-- Nutrition -->
-                                <div class="card-section-bottom">
-                                    <p class="nutri-label">Foco Nutricional da Semana</p>
-                                    <p class="nutri-title">Ferro & Ômega-3 em foco ✨</p>
-                                    <div class="food-icons">
-                                        <span class="food-chip"><span class="emoji">🥬</span> Folhas verdes</span>
-                                        <span class="food-chip"><span class="emoji">🐟</span> Peixe</span>
-                                        <span class="food-chip"><span class="emoji">🫘</span> Feijão</span>
-                                    </div>
-                                    <p class="nutri-tip">O ferro ajuda a prevenir anemia e o ômega-3 contribui para o
-                                        desenvolvimento cerebral do bebê.</p>
-                                </div>
-                                <!-- Arrows on card 2 -->
-                                <button class="arrow-btn arrow-left" onclick="changeCard(-1)"
-                                    aria-label="Card anterior">
-                                    <svg viewBox="0 0 24 24" stroke="#8DAA91" fill="none" stroke-width="2.5"
-                                        stroke-linecap="round" stroke-linejoin="round">
-                                        <polyline points="15 18 9 12 15 6" />
-                                    </svg>
-                                </button>
-                                <button class="arrow-btn arrow-right" onclick="changeCard(1)" aria-label="Próximo card">
-                                    <svg viewBox="0 0 24 24" stroke="#8DAA91" fill="none" stroke-width="2.5"
-                                        stroke-linecap="round" stroke-linejoin="round">
-                                        <polyline points="9 18 15 12 9 6" />
-                                    </svg>
-                                </button>
-                            </div>
-
-                        </div><!-- /track -->
-                    </div><!-- /viewport -->
-
-                    <!-- Dots -->
-                    <div class="dots" id="dots">
-                        <div class="dot active" onclick="goToCard(0)" aria-label="Card 1"></div>
-                        <div class="dot" onclick="goToCard(1)" aria-label="Card 2"></div>
-                    </div>
-                </section>
-
-                <!-- === QUICK ACTIONS === -->
-                <section class="section-wrap" aria-label="Atalhos rápidos UBS">
-                    <h2 class="section-title">Atalhos Rápidos UBS</h2>
-                    <div class="quick-scroll">
-
-                        <!-- 1. Exames -->
-                        <a href="area_medica.html#exames" class="quick-btn ripple" aria-label="Exames" id="btn-exames"
-                            style="text-decoration:none;">
-                            <div class="quick-icon">
-                                <svg viewBox="0 0 24 24">
-                                    <rect x="8" y="2" width="8" height="4" rx="1" ry="1" />
-                                    <path
-                                        d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
-                                    <line x1="9" y1="12" x2="15" y2="12" />
-                                    <line x1="9" y1="16" x2="15" y2="16" />
-                                </svg>
-                            </div>
-                            <span class="quick-label">Exames</span>
-                        </a>
-
-                        <!-- 2. Chat Agente -->
-                        <a href="chat.html" class="quick-btn ripple" aria-label="Chat Agente UBS" id="btn-chat"
-                            style="text-decoration:none;">
-                            <div class="quick-icon">
-                                <svg viewBox="0 0 24 24">
-                                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-                                </svg>
-                            </div>
-                            <span class="quick-label">Chat Agente</span>
-                        </a>
-
-                        <!-- 3. Meus Meds -->
-                        <a href="area_medica.html" class="quick-btn ripple" aria-label="Meus Medicamentos" id="btn-meds"
-                            style="text-decoration:none;">
-                            <div class="quick-icon">
-                                <svg viewBox="0 0 24 24">
-                                    <path d="M10.5 20H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h7" />
-                                    <path d="m8 12 5-5" />
-                                    <ellipse cx="16.5" cy="15.5" rx="5.5" ry="5.5" transform="rotate(-45 16.5 15.5)" />
-                                </svg>
-                            </div>
-                            <span class="quick-label">Meus Meds</span>
-                        </a>
-
-                        <!-- 4. Consultas -->
-                        <button class="quick-btn ripple" aria-label="Consultas" id="btn-consultas">
-                            <div class="quick-icon">
-                                <svg viewBox="0 0 24 24">
-                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-                                    <line x1="16" y1="2" x2="16" y2="6" />
-                                    <line x1="8" y1="2" x2="8" y2="6" />
-                                    <line x1="3" y1="10" x2="21" y2="10" />
-                                </svg>
-                            </div>
-                            <span class="quick-label">Consultas</span>
+                    <!-- Card 1: Dark 3D Fetus -->
+                    <div class="card card-dark" id="card1">
+                        <div class="card-label">
+                            <span>Sua Semana</span>
+                            <strong>Semana 24</strong>
+                        </div>
+                        <!-- BUG4 FIX: botão expandir específico para abrir tela 3D -->
+                        <button onclick="event.stopPropagation(); window.location.href='feto3d.html'"
+                            aria-label="Ver bebê em 3D tela cheia"
+                            style="position:absolute;top:14px;right:14px;z-index:20;background:rgba(141,170,145,0.22);border:1.5px solid rgba(141,170,145,0.5);border-radius:99px;padding:5px 12px;display:flex;align-items:center;gap:5px;cursor:pointer;">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#C5D5C8"
+                                stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path
+                                    d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" />
+                            </svg>
+                            <span style="font-size:9px;font-weight:700;color:#C5D5C8;letter-spacing:0.5px;">VER
+                                EM 3D</span>
                         </button>
+                        <img class="fetus-img" src="assets/fetus_3d.png" alt="Bebê na semana 24" />
+                        <!-- Arrow Left - BUG2 FIX: stopPropagation para não abrir 3D -->
+                        <button class="arrow-btn arrow-left" onclick="event.stopPropagation(); changeCard(-1)"
+                            aria-label="Card anterior">
+                            <svg viewBox="0 0 24 24" stroke="#8DAA91" fill="none" stroke-width="2.5"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="15 18 9 12 15 6" />
+                            </svg>
+                        </button>
+                        <!-- Arrow Right - BUG2 FIX: stopPropagation -->
+                        <button class="arrow-btn arrow-right" onclick="event.stopPropagation(); changeCard(1)"
+                            aria-label="Próximo card">
+                            <svg viewBox="0 0 24 24" stroke="#8DAA91" fill="none" stroke-width="2.5"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="9 18 15 12 9 6" />
+                            </svg>
+                        </button>
+                    </div>
 
-                        <!-- 5. Nomes (NOVO) -->
-                        <a href="nomes.html" class="quick-btn ripple" aria-label="Escolha de Nomes" id="btn-nomes"
-                            style="text-decoration:none;">
-                            <div class="quick-icon">
-                                <svg viewBox="0 0 24 24">
-                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                                    <circle cx="12" cy="7" r="4" />
-                                    <line x1="12" y1="11" x2="12" y2="16" />
-                                    <line x1="9.5" y1="13.5" x2="14.5" y2="13.5" />
-                                </svg>
+                    <!-- Card 2: White Nutritional -->
+                    <div class="card card-white" id="card2">
+                        <!-- Size comparison -->
+                        <div class="card-section-top">
+                            <span class="section-label">Comparação de Tamanho</span>
+                            <span class="size-title">Bebê do tamanho de um abacate 🥑</span>
+                            <img class="avocado-img" src="assets/avocado.png"
+                                alt="Abacate representando o tamanho do bebê" />
+                            <div class="size-tags">
+                                <span class="size-tag">📏 30 cm</span>
+                                <span class="size-tag">⚖️ 600 g</span>
                             </div>
-                            <span class="quick-label">Nomes</span>
-                        </a>
+                        </div>
+                        <!-- Nutrition -->
+                        <div class="card-section-bottom">
+                            <p class="nutri-label">Foco Nutricional da Semana</p>
+                            <p class="nutri-title">Ferro & Ômega-3 em foco ✨</p>
+                            <div class="food-icons">
+                                <span class="food-chip"><span class="emoji">🥬</span> Folhas verdes</span>
+                                <span class="food-chip"><span class="emoji">🐟</span> Peixe</span>
+                                <span class="food-chip"><span class="emoji">🫘</span> Feijão</span>
+                            </div>
+                            <p class="nutri-tip">O ferro ajuda a prevenir anemia e o ômega-3 contribui para o
+                                desenvolvimento cerebral do bebê.</p>
+                        </div>
+                        <!-- Arrows on card 2 -->
+                        <button class="arrow-btn arrow-left" onclick="changeCard(-1)" aria-label="Card anterior">
+                            <svg viewBox="0 0 24 24" stroke="#8DAA91" fill="none" stroke-width="2.5"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="15 18 9 12 15 6" />
+                            </svg>
+                        </button>
+                        <button class="arrow-btn arrow-right" onclick="changeCard(1)" aria-label="Próximo card">
+                            <svg viewBox="0 0 24 24" stroke="#8DAA91" fill="none" stroke-width="2.5"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="9 18 15 12 9 6" />
+                            </svg>
+                        </button>
+                    </div>
 
-                    </div><!-- /quick-scroll -->
-                </section>
+                </div><!-- /track -->
+            </div><!-- /viewport -->
 
-                <!-- === UPCOMING APPOINTMENT === -->
-                <div class="upcoming-card ripple" role="button" tabindex="0"
-                    aria-label="Próxima consulta: Pré-natal, 12 mar">
-                    <div class="upcoming-icon-wrap">
+            <!-- Dots -->
+            <div class="dots" id="dots">
+                <div class="dot active" onclick="goToCard(0)" aria-label="Card 1"></div>
+                <div class="dot" onclick="goToCard(1)" aria-label="Card 2"></div>
+            </div>
+        </section>
+
+        <!-- === QUICK ACTIONS === -->
+        <section class="section-wrap" aria-label="Atalhos rápidos UBS">
+            <h2 class="section-title">Atalhos Rápidos UBS</h2>
+            <div class="quick-scroll">
+
+                <!-- 1. Exames -->
+                <a href="area_medica.html#exames" class="quick-btn ripple" aria-label="Exames" id="btn-exames"
+                    style="text-decoration:none;">
+                    <div class="quick-icon">
+                        <svg viewBox="0 0 24 24">
+                            <rect x="8" y="2" width="8" height="4" rx="1" ry="1" />
+                            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+                            <line x1="9" y1="12" x2="15" y2="12" />
+                            <line x1="9" y1="16" x2="15" y2="16" />
+                        </svg>
+                    </div>
+                    <span class="quick-label">Exames</span>
+                </a>
+
+                <!-- 2. Chat Agente -->
+                <a href="chat.html" class="quick-btn ripple" aria-label="Chat Agente UBS" id="btn-chat"
+                    style="text-decoration:none;">
+                    <div class="quick-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                        </svg>
+                    </div>
+                    <span class="quick-label">Chat Agente</span>
+                </a>
+
+                <!-- 3. Meus Meds -->
+                <a href="area_medica.html" class="quick-btn ripple" aria-label="Meus Medicamentos" id="btn-meds"
+                    style="text-decoration:none;">
+                    <div class="quick-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M10.5 20H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h7" />
+                            <path d="m8 12 5-5" />
+                            <ellipse cx="16.5" cy="15.5" rx="5.5" ry="5.5" transform="rotate(-45 16.5 15.5)" />
+                        </svg>
+                    </div>
+                    <span class="quick-label">Meus Meds</span>
+                </a>
+
+                <!-- 4. Consultas -->
+                <button class="quick-btn ripple" aria-label="Consultas" id="btn-consultas">
+                    <div class="quick-icon">
                         <svg viewBox="0 0 24 24">
                             <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
                             <line x1="16" y1="2" x2="16" y2="6" />
@@ -981,82 +918,111 @@
                             <line x1="3" y1="10" x2="21" y2="10" />
                         </svg>
                     </div>
-                    <div class="upcoming-info">
-                        <p class="upcoming-top">Próxima Consulta</p>
-                        <p class="upcoming-title">Pré-natal — Dra. Ana Lima</p>
-                        <p class="upcoming-sub">12 de março · UBS Centro · 10h00</p>
-                    </div>
-                    <svg class="chevron-right" viewBox="0 0 24 24">
-                        <polyline points="9 18 15 12 9 6" />
-                    </svg>
-                </div>
+                    <span class="quick-label">Consultas</span>
+                </button>
 
-                <!-- === TIPS SECTION === -->
-                <section class="tips-section" aria-label="Dicas da semana">
-                    <h2 class="section-title">Dicas da Semana 💡</h2>
-                    <div class="tips-scroll">
-
-                        <div class="tip-card">
-                            <div class="tip-emoji">🧘‍♀️</div>
-                            <p class="tip-title">Exercícios leves</p>
-                            <p class="tip-desc">Caminhadas de 20 min ajudam na circulação e humor.</p>
-                        </div>
-
-                        <div class="tip-card">
-                            <div class="tip-emoji">💧</div>
-                            <p class="tip-title">Hidratação</p>
-                            <p class="tip-desc">Beba pelo menos 2,5 L de água por dia nesta fase.</p>
-                        </div>
-
-                        <div class="tip-card">
-                            <div class="tip-emoji">😴</div>
-                            <p class="tip-title">Sono de qualidade</p>
-                            <p class="tip-desc">Durma de lado (esquerdo) para melhorar o fluxo sanguíneo.</p>
-                        </div>
-
-                        <div class="tip-card">
-                            <div class="tip-emoji">🎵</div>
-                            <p class="tip-title">Estimulação sonora</p>
-                            <p class="tip-desc">O bebê já ouve! Converse, cante ou coloque música.</p>
-                        </div>
-
-                    </div>
-                </section>
-
-                <!-- Bottom spacer -->
-                <div style="height: 16px;"></div>
-
-            </main>
-
-            <!-- ===== BOTTOM NAV (Home Ativo) ===== -->
-            <nav aria-label="Navegação principal">
-
-                <!-- Home (ativo na Dashboard) -->
-                <a href="index.html" class="nav-item active" aria-label="Home" id="nav-home">
-                    <div class="nav-icon-wrap-bottom">
-                        <svg class="nav-svg" viewBox="0 0 24 24">
-                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                            <polyline points="9 22 9 12 15 12 15 22" />
-                        </svg>
-                    </div>
-                    <span class="nav-label">Home</span>
-                </a>
-
-                <!-- Perfil (link para perfil.html) -->
-                <a href="perfil.html" class="nav-item" aria-label="Perfil" id="nav-perfil"
+                <!-- 5. Nomes (NOVO) -->
+                <a href="nomes.html" class="quick-btn ripple" aria-label="Escolha de Nomes" id="btn-nomes"
                     style="text-decoration:none;">
-                    <div class="nav-icon-wrap-bottom">
-                        <svg class="nav-svg" viewBox="0 0 24 24">
+                    <div class="quick-icon">
+                        <svg viewBox="0 0 24 24">
                             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
                             <circle cx="12" cy="7" r="4" />
+                            <line x1="12" y1="11" x2="12" y2="16" />
+                            <line x1="9.5" y1="13.5" x2="14.5" y2="13.5" />
                         </svg>
                     </div>
-                    <span class="nav-label">Perfil</span>
+                    <span class="quick-label">Nomes</span>
                 </a>
 
-            </nav>
+            </div><!-- /quick-scroll -->
+        </section>
 
-        </div><!-- /phone-frame -->
+        <!-- === UPCOMING APPOINTMENT === -->
+        <div class="upcoming-card ripple" role="button" tabindex="0" aria-label="Próxima consulta: Pré-natal, 12 mar">
+            <div class="upcoming-icon-wrap">
+                <svg viewBox="0 0 24 24">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                    <line x1="16" y1="2" x2="16" y2="6" />
+                    <line x1="8" y1="2" x2="8" y2="6" />
+                    <line x1="3" y1="10" x2="21" y2="10" />
+                </svg>
+            </div>
+            <div class="upcoming-info">
+                <p class="upcoming-top">Próxima Consulta</p>
+                <p class="upcoming-title">Pré-natal — Dra. Ana Lima</p>
+                <p class="upcoming-sub">12 de março · UBS Centro · 10h00</p>
+            </div>
+            <svg class="chevron-right" viewBox="0 0 24 24">
+                <polyline points="9 18 15 12 9 6" />
+            </svg>
+        </div>
+
+        <!-- === TIPS SECTION === -->
+        <section class="tips-section" aria-label="Dicas da semana">
+            <h2 class="section-title">Dicas da Semana 💡</h2>
+            <div class="tips-scroll">
+
+                <div class="tip-card">
+                    <div class="tip-emoji">🧘‍♀️</div>
+                    <p class="tip-title">Exercícios leves</p>
+                    <p class="tip-desc">Caminhadas de 20 min ajudam na circulação e humor.</p>
+                </div>
+
+                <div class="tip-card">
+                    <div class="tip-emoji">💧</div>
+                    <p class="tip-title">Hidratação</p>
+                    <p class="tip-desc">Beba pelo menos 2,5 L de água por dia nesta fase.</p>
+                </div>
+
+                <div class="tip-card">
+                    <div class="tip-emoji">😴</div>
+                    <p class="tip-title">Sono de qualidade</p>
+                    <p class="tip-desc">Durma de lado (esquerdo) para melhorar o fluxo sanguíneo.</p>
+                </div>
+
+                <div class="tip-card">
+                    <div class="tip-emoji">🎵</div>
+                    <p class="tip-title">Estimulação sonora</p>
+                    <p class="tip-desc">O bebê já ouve! Converse, cante ou coloque música.</p>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Bottom spacer -->
+        <div style="height: 16px;"></div>
+
+    </main>
+
+    <!-- ===== BOTTOM NAV (Home Ativo) ===== -->
+    <nav aria-label="Navegação principal">
+
+        <!-- Home (ativo na Dashboard) -->
+        <a href="index.html" class="nav-item active" aria-label="Home" id="nav-home">
+            <div class="nav-icon-wrap-bottom">
+                <svg class="nav-svg" viewBox="0 0 24 24">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                    <polyline points="9 22 9 12 15 12 15 22" />
+                </svg>
+            </div>
+            <span class="nav-label">Home</span>
+        </a>
+
+        <!-- Perfil (link para perfil.html) -->
+        <a href="perfil.html" class="nav-item" aria-label="Perfil" id="nav-perfil" style="text-decoration:none;">
+            <div class="nav-icon-wrap-bottom">
+                <svg class="nav-svg" viewBox="0 0 24 24">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                    <circle cx="12" cy="7" r="4" />
+                </svg>
+            </div>
+            <span class="nav-label">Perfil</span>
+        </a>
+
+    </nav>
+
+    </div><!-- /phone-frame -->
     </div><!-- /phone-shell -->
 
     <script>

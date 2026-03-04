@@ -35,41 +35,11 @@
         body {
             width: 100%;
             height: 100%;
+            height: 100dvh;
             font-family: 'Inter', sans-serif;
-            background: #1a1a2e;
-            overflow: hidden;
-        }
-
-        /* ── PHONE SHELL ── */
-        .phone-shell {
-            position: fixed;
-            inset: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .phone-frame {
-            width: 390px;
-            height: 844px;
             background: var(--white);
-            border-radius: 44px;
             overflow: hidden;
             position: relative;
-            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.08);
-        }
-
-        /* ── NOTCH ── */
-        .notch {
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 120px;
-            height: 34px;
-            background: #1a1a1a;
-            border-radius: 0 0 20px 20px;
-            z-index: 300;
         }
 
         /* ══════════════════════════════════
@@ -339,7 +309,7 @@
         /* Skip link */
         .skip-link {
             position: absolute;
-            top: 52px;
+            top: max(env(safe-area-inset-top, 12px), 52px);
             right: 24px;
             font-size: 13px;
             font-weight: 600;
@@ -368,183 +338,178 @@
 </head>
 
 <body>
-    <div class="phone-shell">
-        <div class="phone-frame">
+    <!-- Skip button -->
+    <a href="index.html" class="skip-link" onclick="localStorage.setItem('onboarded','true')">Pular</a>
 
-            <div class="notch"></div>
-
-            <!-- Skip button -->
-            <a href="index.html" class="skip-link">Pular</a>
-
-            <!-- ══════════════════════════════
+    <!-- ══════════════════════════════
          SLIDER TRACK
     ══════════════════════════════ -->
-            <div class="slider-track" id="sliderTrack">
+    <div class="slider-track" id="sliderTrack">
 
-                <!-- ═══════════════════
+        <!-- ═══════════════════
            SLIDE 1 – Bem-vinda
       ═══════════════════ -->
-                <div class="slide" id="slide1" style="padding-top:48px;">
+        <div class="slide" id="slide1" style="padding-top:48px;">
 
-                    <p class="brand">Gerar Vida (App UBS)</p>
+            <p class="brand">Gerar Vida (App UBS)</p>
 
-                    <!-- Bloco central: imagem + textos centralizados verticalmente -->
-                    <div
-                        style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; width:100%;">
-                        <img class="illus-composicao" src="assets/gestante_composicao.png"
-                            alt="Gestante acariciando a barriga" />
+            <!-- Bloco central: imagem + textos centralizados verticalmente -->
+            <div
+                style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; width:100%;">
+                <img class="illus-composicao" src="assets/gestante_composicao.png"
+                    alt="Gestante acariciando a barriga" />
 
-                        <h1 class="slide-title">Seja bem-vinda! 🤰</h1>
-                        <p class="slide-sub">Sua jornada pré-natal completa na UBS começa aqui. Acompanhe tudo com
-                            carinho e tecnologia.</p>
-                    </div>
-
-                    <button class="cta-btn accent" onclick="goToSlide(1)">
-                        Iniciar Cadastro →
-                    </button>
-
-                </div>
-
-                <!-- ═══════════════════
-           SLIDE 2 – 3D
-      ═══════════════════ -->
-                <div class="slide" id="slide2">
-
-                    <h2 class="slide-title" style="margin-top:14px;">Acompanhe Seu<br />Bebê em 3D</h2>
-
-                    <div class="illus-wrap phone-style">
-                        <img class="illus-img" src="assets/onboarding_phone_3d.png"
-                            alt="Mãos segurando celular com feto 3D"
-                            style="object-fit:cover; object-position: center;" />
-                    </div>
-
-                    <p class="slide-sub">Explore o desenvolvimento semanal com imagens interativas e receba dicas de
-                        saúde personalizadas.</p>
-
-                    <!-- Feature chips -->
-                    <div class="feat-row">
-                        <!-- Clipboard -->
-                        <div class="feat-chip">
-                            <svg viewBox="0 0 24 24">
-                                <rect x="8" y="2" width="8" height="4" rx="1" />
-                                <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
-                                <line x1="9" y1="12" x2="15" y2="12" />
-                                <line x1="9" y1="16" x2="15" y2="16" />
-                            </svg>
-                        </div>
-                        <!-- Chat -->
-                        <div class="feat-chip">
-                            <svg viewBox="0 0 24 24">
-                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-                            </svg>
-                        </div>
-                        <!-- Pill -->
-                        <div class="feat-chip">
-                            <svg viewBox="0 0 24 24">
-                                <path d="m10.5 20.5-7-7a5 5 0 1 1 7.07-7.07l7 7a5 5 0 0 1-7.07 7.07z" />
-                                <line x1="8.5" y1="11.5" x2="14.5" y2="5.5" />
-                            </svg>
-                        </div>
-                        <!-- Hand -->
-                        <div class="feat-chip">
-                            <svg viewBox="0 0 24 24">
-                                <path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0" />
-                                <path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2" />
-                                <path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8" />
-                                <path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34L4 19" />
-                            </svg>
-                        </div>
-                    </div>
-
-                    <div style="flex:1;"></div>
-
-                    <button class="cta-btn primary" onclick="goToSlide(2)">
-                        Próximo →
-                    </button>
-
-                </div>
-
-                <!-- ═══════════════════
-           SLIDE 3 – Benefícios
-      ═══════════════════ -->
-                <div class="slide" id="slide3">
-
-                    <div class="slide3-texts">
-                        <h2 class="slide-title">Benefícios da<br />Prefeitura 🏛️</h2>
-                        <p class="slide-sub" style="margin-top:8px;">Ações exclusivas do município para você:</p>
-                    </div>
-
-                    <!-- Benefits Grid -->
-                    <div class="benefits-grid">
-
-                        <!-- Card 1: Vacinação -->
-                        <div class="benefit-card">
-                            <div class="benefit-icon">
-                                <svg viewBox="0 0 24 24">
-                                    <path d="m19 9-2 2-4.5-4.5 2-2 4.5 4.5z" />
-                                    <path d="m10.5 17.5-1.4 1.4a2 2 0 0 1-2.83 0L3 15.7" />
-                                    <path d="M5 19l2.5-2.5" />
-                                    <line x1="9" y1="7" x2="7" y2="9" />
-                                    <line x1="21" y1="3" x2="18" y2="6" />
-                                    <line x1="3" y1="21" x2="6" y2="18" />
-                                    <path d="m15 5 1.5 1.5" />
-                                    <path d="m9 11 4 4" />
-                                </svg>
-                            </div>
-                            <p class="benefit-text">Vacinação Preventiva Prioritária</p>
-                        </div>
-
-                        <!-- Card 2: Suplementação -->
-                        <div class="benefit-card">
-                            <div class="benefit-icon">
-                                <!-- Milk carton icon -->
-                                <svg viewBox="0 0 24 24">
-                                    <path d="M8 2h8l2 5v14a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7L8 2z" />
-                                    <line x1="8" y1="7" x2="16" y2="7" />
-                                    <path d="M12 11v4" />
-                                    <path d="M10 13h4" />
-                                </svg>
-                            </div>
-                            <p class="benefit-text">Acesso ao Programa de Suplementação</p>
-                        </div>
-
-                        <!-- Card 3: Kit Enxoval (wide) -->
-                        <div class="benefit-card wide">
-                            <div class="benefit-icon">
-                                <!-- Baby basket -->
-                                <svg viewBox="0 0 24 24">
-                                    <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
-                                    <line x1="3" y1="6" x2="21" y2="6" />
-                                    <path d="M16 10a4 4 0 0 1-8 0" />
-                                </svg>
-                            </div>
-                            <p class="benefit-text">Kit Enxoval Materno</p>
-                            <p class="benefit-sub">Verifique disponibilidade na sua UBS</p>
-                        </div>
-
-                    </div>
-
-                    <div style="flex:1; min-height: 12px;"></div>
-
-                    <button class="cta-btn accent" onclick="window.location.href='index.html'">
-                        Concluir e ir para Home 🏠
-                    </button>
-
-                </div>
-
-            </div><!-- /slider-track -->
-
-            <!-- ══════════════════════
-         DOTS INDICATOR
-    ══════════════════════ -->
-            <div class="dots-wrap" id="dotsWrap">
-                <div class="dot active" onclick="goToSlide(0)"></div>
-                <div class="dot" onclick="goToSlide(1)"></div>
-                <div class="dot" onclick="goToSlide(2)"></div>
+                <h1 class="slide-title">Seja bem-vinda! 🤰</h1>
+                <p class="slide-sub">Sua jornada pré-natal completa na UBS começa aqui. Acompanhe tudo com
+                    carinho e tecnologia.</p>
             </div>
 
+            <button class="cta-btn accent" onclick="goToSlide(1)">
+                Iniciar Cadastro →
+            </button>
 
-        </div><!-- /phone-frame -->
+        </div>
+
+        <!-- ═══════════════════
+           SLIDE 2 – 3D
+      ═══════════════════ -->
+        <div class="slide" id="slide2">
+
+            <h2 class="slide-title" style="margin-top:14px;">Acompanhe Seu<br />Bebê em 3D</h2>
+
+            <div class="illus-wrap phone-style">
+                <img class="illus-img" src="assets/onboarding_phone_3d.png" alt="Mãos segurando celular com feto 3D"
+                    style="object-fit:cover; object-position: center;" />
+            </div>
+
+            <p class="slide-sub">Explore o desenvolvimento semanal com imagens interativas e receba dicas de
+                saúde personalizadas.</p>
+
+            <!-- Feature chips -->
+            <div class="feat-row">
+                <!-- Clipboard -->
+                <div class="feat-chip">
+                    <svg viewBox="0 0 24 24">
+                        <rect x="8" y="2" width="8" height="4" rx="1" />
+                        <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+                        <line x1="9" y1="12" x2="15" y2="12" />
+                        <line x1="9" y1="16" x2="15" y2="16" />
+                    </svg>
+                </div>
+                <!-- Chat -->
+                <div class="feat-chip">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                    </svg>
+                </div>
+                <!-- Pill -->
+                <div class="feat-chip">
+                    <svg viewBox="0 0 24 24">
+                        <path d="m10.5 20.5-7-7a5 5 0 1 1 7.07-7.07l7 7a5 5 0 0 1-7.07 7.07z" />
+                        <line x1="8.5" y1="11.5" x2="14.5" y2="5.5" />
+                    </svg>
+                </div>
+                <!-- Hand -->
+                <div class="feat-chip">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0" />
+                        <path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2" />
+                        <path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8" />
+                        <path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34L4 19" />
+                    </svg>
+                </div>
+            </div>
+
+            <div style="flex:1;"></div>
+
+            <button class="cta-btn primary" onclick="goToSlide(2)">
+                Próximo →
+            </button>
+
+        </div>
+
+        <!-- ═══════════════════
+           SLIDE 3 – Benefícios
+      ═══════════════════ -->
+        <div class="slide" id="slide3">
+
+            <div class="slide3-texts">
+                <h2 class="slide-title">Benefícios da<br />Prefeitura 🏛️</h2>
+                <p class="slide-sub" style="margin-top:8px;">Ações exclusivas do município para você:</p>
+            </div>
+
+            <!-- Benefits Grid -->
+            <div class="benefits-grid">
+
+                <!-- Card 1: Vacinação -->
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="m19 9-2 2-4.5-4.5 2-2 4.5 4.5z" />
+                            <path d="m10.5 17.5-1.4 1.4a2 2 0 0 1-2.83 0L3 15.7" />
+                            <path d="M5 19l2.5-2.5" />
+                            <line x1="9" y1="7" x2="7" y2="9" />
+                            <line x1="21" y1="3" x2="18" y2="6" />
+                            <line x1="3" y1="21" x2="6" y2="18" />
+                            <path d="m15 5 1.5 1.5" />
+                            <path d="m9 11 4 4" />
+                        </svg>
+                    </div>
+                    <p class="benefit-text">Vacinação Preventiva Prioritária</p>
+                </div>
+
+                <!-- Card 2: Suplementação -->
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <!-- Milk carton icon -->
+                        <svg viewBox="0 0 24 24">
+                            <path d="M8 2h8l2 5v14a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7L8 2z" />
+                            <line x1="8" y1="7" x2="16" y2="7" />
+                            <path d="M12 11v4" />
+                            <path d="M10 13h4" />
+                        </svg>
+                    </div>
+                    <p class="benefit-text">Acesso ao Programa de Suplementação</p>
+                </div>
+
+                <!-- Card 3: Kit Enxoval (wide) -->
+                <div class="benefit-card wide">
+                    <div class="benefit-icon">
+                        <!-- Baby basket -->
+                        <svg viewBox="0 0 24 24">
+                            <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+                            <line x1="3" y1="6" x2="21" y2="6" />
+                            <path d="M16 10a4 4 0 0 1-8 0" />
+                        </svg>
+                    </div>
+                    <p class="benefit-text">Kit Enxoval Materno</p>
+                    <p class="benefit-sub">Verifique disponibilidade na sua UBS</p>
+                </div>
+
+            </div>
+
+            <div style="flex:1; min-height: 12px;"></div>
+
+            <button class="cta-btn accent"
+                onclick="localStorage.setItem('onboarded','true'); window.location.href='index.html'">
+                Concluir e ir para Home 🏠
+            </button>
+
+        </div>
+
+    </div><!-- /slider-track -->
+
+    <!-- ══════════════════════
+         DOTS INDICATOR
+    ══════════════════════ -->
+    <div class="dots-wrap" id="dotsWrap">
+        <div class="dot active" onclick="goToSlide(0)"></div>
+        <div class="dot" onclick="goToSlide(1)"></div>
+        <div class="dot" onclick="goToSlide(2)"></div>
+    </div>
+
+
+    </div><!-- /phone-frame -->
     </div><!-- /phone-shell -->
 
     <script>

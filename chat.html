@@ -37,42 +37,11 @@
         html,
         body {
             height: 100%;
+            height: 100dvh;
             font-family: 'Inter', sans-serif;
-            background: #1a1a2e;
-            overflow: hidden;
-        }
-
-        /* ===== PHONE WRAPPER ===== */
-        .phone-shell {
-            position: fixed;
-            inset: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #1a1a2e;
-        }
-
-        .phone-frame {
-            width: 390px;
-            height: 844px;
             background: var(--bg);
-            border-radius: 44px;
             overflow: hidden;
             position: relative;
-            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.08);
-        }
-
-        /* ===== NOTCH ===== */
-        .notch {
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 120px;
-            height: 34px;
-            background: #1a1a1a;
-            border-radius: 0 0 20px 20px;
-            z-index: 200;
         }
 
         /* ===== HEADER ===== */
@@ -88,6 +57,7 @@
             display: flex;
             align-items: flex-end;
             padding: 0 18px 12px;
+            padding-top: max(env(safe-area-inset-top, 0px), 36px);
             gap: 12px;
         }
 
@@ -632,185 +602,167 @@
 
 <body>
 
-    <div class="phone-shell">
-        <div class="phone-frame">
+    <!-- ===== HEADER ===== -->
+    <header>
+        <a href="index.html" class="header-back" aria-label="Voltar para Home">
+            <svg viewBox="0 0 24 24">
+                <polyline points="15 18 9 12 15 6" />
+            </svg>
+        </a>
 
-            <!-- Notch -->
-            <div class="notch"></div>
+        <div class="header-center">
+            <h1 class="header-title">Chat com Agente</h1>
+            <span class="header-status">
+                <span class="status-dot"></span> Online agora
+            </span>
+        </div>
 
-            <!-- ===== HEADER ===== -->
-            <header>
-                <a href="index.html" class="header-back" aria-label="Voltar para Home">
-                    <svg viewBox="0 0 24 24">
-                        <polyline points="15 18 9 12 15 6" />
-                    </svg>
-                </a>
+        <div class="agent-avatar-wrap">
+            <img class="agent-avatar" src="assets/avatar_agente.png" alt="Avatar da Agente de Saúde" />
+            <span class="agent-online-badge"></span>
+        </div>
+    </header>
 
-                <div class="header-center">
-                    <h1 class="header-title">Chat com Agente</h1>
-                    <span class="header-status">
-                        <span class="status-dot"></span> Online agora
-                    </span>
-                </div>
+    <!-- ===== CHAT BODY ===== -->
+    <div class="chat-scroll" id="chatScroll">
 
-                <div class="agent-avatar-wrap">
-                    <img class="agent-avatar"
-                        src="assets/avatar_agente.png"
-                        alt="Avatar da Agente de Saúde" />
-                    <span class="agent-online-badge"></span>
-                </div>
-            </header>
+        <div class="date-separator">
+            <span class="date-label">Hoje — Seg, 03 Mar</span>
+        </div>
 
-            <!-- ===== CHAT BODY ===== -->
-            <div class="chat-scroll" id="chatScroll">
-
-                <div class="date-separator">
-                    <span class="date-label">Hoje — Seg, 03 Mar</span>
-                </div>
-
-                <!-- Mensagem 1: Agente -->
-                <div class="msg-row agent">
-                    <img class="msg-mini-avatar"
-                        src="assets/avatar_agente.png"
-                        alt="Agente" />
-                    <div class="msg-bubble-wrap">
-                        <div class="bubble agent">Olá, Maria! 👋 Como você está se sentindo hoje?</div>
-                        <span class="msg-meta">09:30 AM</span>
-                    </div>
-                </div>
-
-                <!-- Mensagem 2: Usuária -->
-                <div class="msg-row user">
-                    <div class="msg-bubble-wrap">
-                        <div class="bubble user">Oi Roberto! Estou bem, só com um pouco de azia. 😅</div>
-                        <span class="msg-meta">
-                            09:32 AM
-                            <svg class="read-check" viewBox="0 0 24 24">
-                                <polyline points="20 6 9 17 4 12" />
-                            </svg>
-                        </span>
-                    </div>
-                </div>
-
-                <!-- Mensagem 3: Agente responde -->
-                <div class="msg-row agent">
-                    <img class="msg-mini-avatar"
-                        src="assets/avatar_agente.png"
-                        alt="Agente" />
-                    <div class="msg-bubble-wrap">
-                        <div class="bubble agent">A azia é comum na semana 24. Procure comer em porções menores e evite
-                            deitar logo após as refeições. 🌿</div>
-                        <span class="msg-meta">09:33 AM</span>
-                    </div>
-                </div>
-
-                <!-- Mensagem 4: Agente – pergunta -->
-                <div class="msg-row agent">
-                    <img class="msg-mini-avatar"
-                        src="assets/avatar_agente.png"
-                        alt="Agente" />
-                    <div class="msg-bubble-wrap">
-                        <div class="bubble agent">Você está tomando os seus medicamentos certinho? Posso verificar o seu
-                            histórico aqui.</div>
-                        <span class="msg-meta">09:33 AM</span>
-                    </div>
-                </div>
-
-                <!-- Mensagem 5: Usuária -->
-                <div class="msg-row user">
-                    <div class="msg-bubble-wrap">
-                        <div class="bubble user">Sim! Já tomei o Ácido Fólico de manhã. O Sulfato Ferroso vou tomar
-                            depois do almoço.</div>
-                        <span class="msg-meta">
-                            09:35 AM
-                            <svg class="read-check" viewBox="0 0 24 24">
-                                <polyline points="20 6 9 17 4 12" />
-                            </svg>
-                        </span>
-                    </div>
-                </div>
-
-                <!-- Mensagem 6: Agente -->
-                <div class="msg-row agent">
-                    <img class="msg-mini-avatar"
-                        src="assets/avatar_agente.png"
-                        alt="Agente" />
-                    <div class="msg-bubble-wrap">
-                        <div class="bubble agent">Perfeito! 🎉 Sua próxima consulta é dia 12 de março com a Dra. Ana
-                            Lima. Gostaria de confirmar ou reagendar?</div>
-                        <span class="msg-meta">09:36 AM</span>
-                    </div>
-                </div>
-
-                <!-- Quick replies -->
-                <div class="quick-replies" id="quickReplies">
-                    <button class="quick-chip" onclick="sendQuickReply('Confirmar consulta ✅')">Confirmar ✅</button>
-                    <button class="quick-chip" onclick="sendQuickReply('Quero reagendar 📅')">Reagendar 📅</button>
-                    <button class="quick-chip" onclick="sendQuickReply('Ver detalhes da consulta')">Ver
-                        detalhes</button>
-                </div>
-
-                <!-- Typing indicator (visível no final) -->
-                <div class="msg-row agent" id="typingRow" style="display:none;">
-                    <img class="msg-mini-avatar"
-                        src="assets/avatar_agente.png"
-                        alt="Agente" />
-                    <div class="typing-bubble">
-                        <span></span><span></span><span></span>
-                    </div>
-                </div>
-
-            </div><!-- /chat-scroll -->
-
-            <!-- ===== INPUT AREA ===== -->
-            <div class="input-area">
-                <!-- Clipe de papel -->
-                <button class="attach-btn" aria-label="Anexar arquivo">
-                    <svg viewBox="0 0 24 24">
-                        <path
-                            d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48" />
-                    </svg>
-                </button>
-
-                <!-- Campo de texto -->
-                <div class="msg-input-wrap">
-                    <textarea id="msg-input" rows="1" placeholder="Digitar mensagem..." aria-label="Campo de mensagem"
-                        onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
-                </div>
-
-                <!-- Botão Enviar -->
-                <button class="send-btn" aria-label="Enviar mensagem" onclick="sendMessage()">
-                    <svg viewBox="0 0 24 24">
-                        <line x1="22" y1="2" x2="11" y2="13" />
-                        <polygon points="22 2 15 22 11 13 2 9 22 2" />
-                    </svg>
-                </button>
+        <!-- Mensagem 1: Agente -->
+        <div class="msg-row agent">
+            <img class="msg-mini-avatar" src="assets/avatar_agente.png" alt="Agente" />
+            <div class="msg-bubble-wrap">
+                <div class="bubble agent">Olá, Maria! 👋 Como você está se sentindo hoje?</div>
+                <span class="msg-meta">09:30 AM</span>
             </div>
+        </div>
 
-            <!-- ===== BOTTOM NAV (tela interna: ambos inativos) ===== -->
-            <nav aria-label="Navegação principal">
-                <a href="index.html" class="nav-item" aria-label="Ir para Home" id="nav-home">
-                    <div class="nav-icon-wrap">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                            <polyline points="9 22 9 12 15 12 15 22" />
-                        </svg>
-                    </div>
-                    <span class="nav-label">Home</span>
-                </a>
+        <!-- Mensagem 2: Usuária -->
+        <div class="msg-row user">
+            <div class="msg-bubble-wrap">
+                <div class="bubble user">Oi Roberto! Estou bem, só com um pouco de azia. 😅</div>
+                <span class="msg-meta">
+                    09:32 AM
+                    <svg class="read-check" viewBox="0 0 24 24">
+                        <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                </span>
+            </div>
+        </div>
 
-                <button class="nav-item" aria-label="Perfil" id="nav-perfil">
-                    <div class="nav-icon-wrap">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                            <circle cx="12" cy="7" r="4" />
-                        </svg>
-                    </div>
-                    <span class="nav-label">Perfil</span>
-                </button>
-            </nav>
+        <!-- Mensagem 3: Agente responde -->
+        <div class="msg-row agent">
+            <img class="msg-mini-avatar" src="assets/avatar_agente.png" alt="Agente" />
+            <div class="msg-bubble-wrap">
+                <div class="bubble agent">A azia é comum na semana 24. Procure comer em porções menores e evite
+                    deitar logo após as refeições. 🌿</div>
+                <span class="msg-meta">09:33 AM</span>
+            </div>
+        </div>
 
-        </div><!-- /phone-frame -->
+        <!-- Mensagem 4: Agente – pergunta -->
+        <div class="msg-row agent">
+            <img class="msg-mini-avatar" src="assets/avatar_agente.png" alt="Agente" />
+            <div class="msg-bubble-wrap">
+                <div class="bubble agent">Você está tomando os seus medicamentos certinho? Posso verificar o seu
+                    histórico aqui.</div>
+                <span class="msg-meta">09:33 AM</span>
+            </div>
+        </div>
+
+        <!-- Mensagem 5: Usuária -->
+        <div class="msg-row user">
+            <div class="msg-bubble-wrap">
+                <div class="bubble user">Sim! Já tomei o Ácido Fólico de manhã. O Sulfato Ferroso vou tomar
+                    depois do almoço.</div>
+                <span class="msg-meta">
+                    09:35 AM
+                    <svg class="read-check" viewBox="0 0 24 24">
+                        <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                </span>
+            </div>
+        </div>
+
+        <!-- Mensagem 6: Agente -->
+        <div class="msg-row agent">
+            <img class="msg-mini-avatar" src="assets/avatar_agente.png" alt="Agente" />
+            <div class="msg-bubble-wrap">
+                <div class="bubble agent">Perfeito! 🎉 Sua próxima consulta é dia 12 de março com a Dra. Ana
+                    Lima. Gostaria de confirmar ou reagendar?</div>
+                <span class="msg-meta">09:36 AM</span>
+            </div>
+        </div>
+
+        <!-- Quick replies -->
+        <div class="quick-replies" id="quickReplies">
+            <button class="quick-chip" onclick="sendQuickReply('Confirmar consulta ✅')">Confirmar ✅</button>
+            <button class="quick-chip" onclick="sendQuickReply('Quero reagendar 📅')">Reagendar 📅</button>
+            <button class="quick-chip" onclick="sendQuickReply('Ver detalhes da consulta')">Ver
+                detalhes</button>
+        </div>
+
+        <!-- Typing indicator (visível no final) -->
+        <div class="msg-row agent" id="typingRow" style="display:none;">
+            <img class="msg-mini-avatar" src="assets/avatar_agente.png" alt="Agente" />
+            <div class="typing-bubble">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+
+    </div><!-- /chat-scroll -->
+
+    <!-- ===== INPUT AREA ===== -->
+    <div class="input-area">
+        <!-- Clipe de papel -->
+        <button class="attach-btn" aria-label="Anexar arquivo">
+            <svg viewBox="0 0 24 24">
+                <path
+                    d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48" />
+            </svg>
+        </button>
+
+        <!-- Campo de texto -->
+        <div class="msg-input-wrap">
+            <textarea id="msg-input" rows="1" placeholder="Digitar mensagem..." aria-label="Campo de mensagem"
+                onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+        </div>
+
+        <!-- Botão Enviar -->
+        <button class="send-btn" aria-label="Enviar mensagem" onclick="sendMessage()">
+            <svg viewBox="0 0 24 24">
+                <line x1="22" y1="2" x2="11" y2="13" />
+                <polygon points="22 2 15 22 11 13 2 9 22 2" />
+            </svg>
+        </button>
+    </div>
+
+    <!-- ===== BOTTOM NAV (tela interna: ambos inativos) ===== -->
+    <nav aria-label="Navegação principal">
+        <a href="index.html" class="nav-item" aria-label="Ir para Home" id="nav-home">
+            <div class="nav-icon-wrap">
+                <svg viewBox="0 0 24 24">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                    <polyline points="9 22 9 12 15 12 15 22" />
+                </svg>
+            </div>
+            <span class="nav-label">Home</span>
+        </a>
+
+        <button class="nav-item" aria-label="Perfil" id="nav-perfil">
+            <div class="nav-icon-wrap">
+                <svg viewBox="0 0 24 24">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                    <circle cx="12" cy="7" r="4" />
+                </svg>
+            </div>
+            <span class="nav-label">Perfil</span>
+        </button>
+    </nav>
+
+    </div><!-- /phone-frame -->
     </div><!-- /phone-shell -->
 
     <script>
