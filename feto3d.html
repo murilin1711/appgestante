@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Gerar Vida – Bebê 3D · Semana 24</title>
+    <meta name="description" content="Visualização interativa do bebê na semana 24 – App Gerar Vida." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet" />
+    <style>
+        :root {
+            --plum: #301B28;
+            --primary: #8DAA91;
+            --accent: #E5987D;
+            --white: #ffffff;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            font-family: 'Inter', sans-serif;
+            background: #1a1a2e;
+            overflow: hidden;
+        }
+
+        /* ── PHONE SHELL ── */
+        .phone-shell {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .phone-frame {
+            width: 390px;
+            height: 844px;
+            background: var(--plum);
+            border-radius: 44px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.08);
+            animation: heroIn 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+
+        @keyframes heroIn {
+            from {
+                transform: scale(0.88) translateY(30px);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1) translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* ── NOTCH ── */
+        .notch {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 34px;
+            background: #1a1a1a;
+            border-radius: 0 0 20px 20px;
+            z-index: 300;
+        }
+
+        /* ── FETAL IMAGE CONTAINER ── */
+        .fetus-scene {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .fetus-bg-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center 30%;
+            filter: brightness(0.92) contrast(1.05) saturate(1.1) warm(1);
+            transition: transform 0.4s ease;
+            user-select: none;
+            -webkit-user-drag: none;
+        }
+
+        /* Warm overlay to simulate uterine lighting */
+        .uterine-overlay {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse 70% 80% at 55% 45%,
+                    transparent 30%,
+                    rgba(48, 27, 40, 0.45) 100%);
+            pointer-events: none;
+        }
+
+        /* Ambient warm glow */
+        .warm-glow {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse 80% 60% at 55% 40%,
+                    rgba(255, 180, 100, 0.06) 0%,
+                    transparent 65%);
+            pointer-events: none;
+        }
+
+        /* ── DRAG HINT ── */
+        .drag-hint {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            cursor: grab;
+            z-index: 5;
+        }
+
+        .drag-hint:active {
+            cursor: grabbing;
+        }
+
+        /* ── FLOATING HEADER ── */
+        .float-header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 200;
+            padding: 44px 20px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            pointer-events: none;
+        }
+
+        .back-btn {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            background: rgba(141, 170, 145, 0.25);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1.5px solid rgba(141, 170, 145, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            pointer-events: all;
+            text-decoration: none;
+            transition: background 0.2s, transform 0.15s;
+        }
+
+        .back-btn:active {
+            transform: scale(0.88);
+        }
+
+        .back-btn svg {
+            width: 20px;
+            height: 20px;
+            stroke: white;
+            fill: none;
+            stroke-width: 2.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .week-label {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--white);
+            letter-spacing: 0.3px;
+            text-shadow: 0 2px 14px rgba(0, 0, 0, 0.7);
+        }
+
+        .header-spacer {
+            width: 46px;
+        }
+
+        /* ── HOTSPOTS ── */
+        .hotspot {
+            position: absolute;
+            z-index: 150;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: rgba(141, 170, 145, 0.2);
+            border: 2px solid rgba(141, 170, 145, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            animation: hotPulse 2.6s infinite;
+            transition: transform 0.2s, background 0.2s;
+            pointer-events: all;
+        }
+
+        .hotspot:active {
+            transform: scale(1.2);
+            background: rgba(141, 170, 145, 0.5);
+        }
+
+        @keyframes hotPulse {
+
+            0%,
+            100% {
+                box-shadow: 0 0 0 0 rgba(141, 170, 145, 0.6), 0 0 12px rgba(141, 170, 145, 0.2);
+            }
+
+            50% {
+                box-shadow: 0 0 0 12px rgba(141, 170, 145, 0), 0 0 20px rgba(141, 170, 145, 0.3);
+            }
+        }
+
+        .hotspot-dot {
+            width: 13px;
+            height: 13px;
+            border-radius: 50%;
+            background: var(--primary);
+            box-shadow: 0 0 8px rgba(141, 170, 145, 0.8);
+        }
+
+        .hotspot-label {
+            position: absolute;
+            bottom: -22px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 9.5px;
+            font-weight: 700;
+            color: rgba(197, 213, 200, 0.95);
+            white-space: nowrap;
+            text-shadow: 0 1px 6px rgba(0, 0, 0, 0.9);
+            letter-spacing: 0.3px;
+        }
+
+        /* Hotspot positions — calibrated over the photorealistic fetal image */
+        /* Image: head top-right, body center, hand lower-left */
+        #hs-cerebro {
+            top: 17%;
+            left: 55%;
+        }
+
+        #hs-coracao {
+            top: 41%;
+            left: 47%;
+        }
+
+        #hs-mao {
+            top: 55%;
+            left: 30%;
+        }
+
+        /* ── INFO CARD ── */
+        .info-card {
+            position: absolute;
+            bottom: 108px;
+            left: 18px;
+            right: 18px;
+            z-index: 220;
+            background: rgba(252, 250, 248, 0.97);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 22px;
+            padding: 20px 18px 18px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.55);
+            transform: translateY(40px) scale(0.95);
+            opacity: 0;
+            pointer-events: none;
+            transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.25s;
+        }
+
+        .info-card.open {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .info-card-close {
+            position: absolute;
+            top: 12px;
+            right: 14px;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(141, 170, 145, 0.18);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .info-card-close:active {
+            background: rgba(141, 170, 145, 0.38);
+        }
+
+        .info-card-close svg {
+            width: 14px;
+            height: 14px;
+            stroke: #666;
+            fill: none;
+            stroke-width: 2.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .info-card-row1 {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 10px;
+            padding-right: 30px;
+        }
+
+        .info-card-emoji {
+            font-size: 30px;
+            flex-shrink: 0;
+            line-height: 1;
+        }
+
+        .info-card-title {
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--accent);
+            line-height: 1.3;
+        }
+
+        .info-card-text {
+            font-size: 12.5px;
+            line-height: 1.65;
+            color: #4a6b4e;
+            font-weight: 500;
+        }
+
+        .info-card-badge {
+            display: inline-block;
+            margin-top: 10px;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 99px;
+            background: rgba(141, 170, 145, 0.13);
+            color: var(--primary);
+            letter-spacing: 0.3px;
+        }
+
+        /* ── GESTATIONAL CARD ── */
+        .gest-card {
+            position: absolute;
+            bottom: 26px;
+            left: 18px;
+            right: 18px;
+            z-index: 200;
+            background: var(--accent);
+            border-radius: 20px;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 10px 35px rgba(229, 152, 125, 0.5);
+            animation: cardUp 0.5s 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+        }
+
+        @keyframes cardUp {
+            from {
+                transform: translateY(70px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .gest-label {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 3px;
+        }
+
+        .gest-main {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--white);
+            letter-spacing: -0.4px;
+            line-height: 1.2;
+        }
+
+        .gest-sub {
+            font-size: 11px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.72);
+            margin-top: 3px;
+        }
+
+        .gest-emoji {
+            font-size: 34px;
+        }
+
+        /* ── ROTATE HINT ── */
+        .rotate-hint {
+            position: absolute;
+            bottom: 112px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 190;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.10);
+            backdrop-filter: blur(6px);
+            border-radius: 99px;
+            padding: 6px 14px;
+            font-size: 10px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.6);
+            white-space: nowrap;
+            animation: hintFade 3.5s 1.5s ease both;
+            pointer-events: none;
+        }
+
+        @keyframes hintFade {
+
+            0%,
+            70% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0;
+            }
+        }
+
+        /* ── ZOOM controls ── */
+        .zoom-controls {
+            position: absolute;
+            right: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 180;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .zoom-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 20px;
+            font-weight: 300;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.15s, transform 0.12s;
+            line-height: 1;
+        }
+
+        .zoom-btn:active {
+            background: rgba(141, 170, 145, 0.35);
+            transform: scale(0.9);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="phone-shell">
+        <div class="phone-frame">
+
+            <!-- Notch -->
+            <div class="notch"></div>
+
+            <!-- ═══ FETAL SCENE ═══ -->
+            <div class="fetus-scene" id="fetusScene">
+                <img class="fetus-bg-image" id="fetusImg" src="assets/feto_realista.png"
+                    alt="Visualização do bebê na semana 24" draggable="false" />
+                <!-- Uterine lighting overlays -->
+                <div class="uterine-overlay"></div>
+                <div class="warm-glow"></div>
+                <!-- Drag/pinch capture layer -->
+                <div class="drag-hint" id="dragLayer"></div>
+            </div>
+
+            <!-- ═══ FLOATING HEADER ═══ -->
+            <div class="float-header">
+                <a href="index.html" class="back-btn" aria-label="Voltar">
+                    <svg viewBox="0 0 24 24">
+                        <polyline points="15 18 9 12 15 6" />
+                    </svg>
+                </a>
+                <span class="week-label">Semana 24 🫀</span>
+                <div class="header-spacer"></div>
+            </div>
+
+            <!-- ═══ HOTSPOTS ═══ -->
+            <div class="hotspot" id="hs-cerebro" onclick="showInfo('cerebro')" tabindex="0" role="button"
+                aria-label="Cérebro">
+                <div class="hotspot-dot"></div>
+                <span class="hotspot-label">Cérebro</span>
+            </div>
+
+            <div class="hotspot" id="hs-coracao" onclick="showInfo('coracao')" tabindex="0" role="button"
+                aria-label="Coração">
+                <div class="hotspot-dot"></div>
+                <span class="hotspot-label">Coração</span>
+            </div>
+
+            <div class="hotspot" id="hs-mao" onclick="showInfo('mao')" tabindex="0" role="button" aria-label="Mãozinha">
+                <div class="hotspot-dot"></div>
+                <span class="hotspot-label">Mãozinha</span>
+            </div>
+
+            <!-- ═══ INFO CARD ═══ -->
+            <div class="info-card" id="infoCard" role="dialog" aria-modal="true" aria-live="polite">
+                <button class="info-card-close" onclick="closeInfo()" aria-label="Fechar">
+                    <svg viewBox="0 0 24 24">
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                </button>
+                <div class="info-card-row1">
+                    <span class="info-card-emoji" id="infoIcon">🧠</span>
+                    <p class="info-card-title" id="infoTitle">Foco: Desenvolvimento Cerebral</p>
+                </div>
+                <p class="info-card-text" id="infoText">
+                    O córtex cerebral está se formando ativamente. Os neurônios fazem até 250 mil novas conexões por
+                    minuto. A mielinização começa nesta fase.
+                </p>
+                <span class="info-card-badge">Semana 24 · Em desenvolvimento</span>
+            </div>
+
+            <!-- ═══ ZOOM CONTROLS ═══ -->
+            <div class="zoom-controls">
+                <button class="zoom-btn" onclick="zoom(0.15)" aria-label="Aproximar">+</button>
+                <button class="zoom-btn" onclick="zoom(-0.15)" aria-label="Afastar">−</button>
+            </div>
+
+            <!-- ═══ HINT ═══ -->
+            <div class="rotate-hint">
+                🔍 Pinça para zoom · Arraste para mover
+            </div>
+
+            <!-- ═══ GESTATIONAL CARD ═══ -->
+            <div class="gest-card">
+                <div>
+                    <p class="gest-label">⏳ Cálculo Gestacional</p>
+                    <p class="gest-main">Faltam 100 dias!</p>
+                    <p class="gest-sub">Previsão de parto: 12 de junho de 2025</p>
+                </div>
+                <span class="gest-emoji">🍼</span>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        /* ══════════════════════════════════════
+           HOTSPOT DATA
+        ══════════════════════════════════════ */
+        const data = {
+            cerebro: {
+                icon: '🧠',
+                title: 'Foco: Desenvolvimento Cerebral',
+                text: 'O córtex cerebral está em plena formação. Os neurônios estabelecem até 250 mil novas conexões por minuto. A mielinização está começando e os sentidos já estão ativos.',
+            },
+            coracao: {
+                icon: '🫀',
+                title: 'Foco: Coração em Ritmo',
+                text: 'O coraçãozinho bate entre 120 e 160 vezes por minuto. As quatro câmaras já estão completamente formadas e bombeando sangue oxigenado pelo corpo do bebê.',
+            },
+            mao: {
+                icon: '🤚',
+                title: 'Foco: Mãozinhas',
+                text: 'Os dedos têm impressões digitais únicas e definitivas! O bebê pratica reflexos de preensão, levando as mãozinhas ao rosto com frequência.',
+            },
+        };
+
+        function showInfo(id) {
+            const d = data[id];
+            document.getElementById('infoIcon').textContent = d.icon;
+            document.getElementById('infoTitle').textContent = d.title;
+            document.getElementById('infoText').textContent = d.text;
+            document.getElementById('infoCard').classList.add('open');
+        }
+
+        function closeInfo() {
+            document.getElementById('infoCard').classList.remove('open');
+        }
+
+        /* ══════════════════════════════════════
+           PINCH-TO-ZOOM & DRAG TO PAN
+        ══════════════════════════════════════ */
+        const img = document.getElementById('fetusImg');
+        const layer = document.getElementById('dragLayer');
+
+        let scale = 1;
+        let tx = 0, ty = 0;
+        let dragging = false;
+        let lastX = 0, lastY = 0;
+        let prevDist = 0;
+
+        function applyTransform() {
+            img.style.transform = `scale(${scale}) translate(${tx}px, ${ty}px)`;
+        }
+
+        /* Zoom buttons */
+        function zoom(delta) {
+            scale = Math.max(0.8, Math.min(3.2, scale + delta));
+            applyTransform();
+        }
+
+        /* Mouse drag */
+        layer.addEventListener('mousedown', e => {
+            dragging = true;
+            lastX = e.clientX; lastY = e.clientY;
+        });
+        window.addEventListener('mouseup', () => { dragging = false; });
+        window.addEventListener('mousemove', e => {
+            if (!dragging) return;
+            tx += (e.clientX - lastX) / scale;
+            ty += (e.clientY - lastY) / scale;
+            lastX = e.clientX; lastY = e.clientY;
+            applyTransform();
+        });
+
+        /* Mouse wheel zoom */
+        layer.addEventListener('wheel', e => {
+            e.preventDefault();
+            scale = Math.max(0.8, Math.min(3.2, scale - e.deltaY * 0.0012));
+            applyTransform();
+        }, { passive: false });
+
+        /* Touch drag */
+        layer.addEventListener('touchstart', e => {
+            if (e.touches.length === 1) {
+                dragging = true;
+                lastX = e.touches[0].clientX;
+                lastY = e.touches[0].clientY;
+            } else if (e.touches.length === 2) {
+                dragging = false;
+                prevDist = Math.hypot(
+                    e.touches[0].clientX - e.touches[1].clientX,
+                    e.touches[0].clientY - e.touches[1].clientY
+                );
+            }
+        }, { passive: true });
+
+        layer.addEventListener('touchend', () => { dragging = false; }, { passive: true });
+
+        layer.addEventListener('touchmove', e => {
+            if (e.touches.length === 1 && dragging) {
+                const dx = e.touches[0].clientX - lastX;
+                const dy = e.touches[0].clientY - lastY;
+                tx += dx / scale;
+                ty += dy / scale;
+                lastX = e.touches[0].clientX;
+                lastY = e.touches[0].clientY;
+                applyTransform();
+            } else if (e.touches.length === 2) {
+                const dist = Math.hypot(
+                    e.touches[0].clientX - e.touches[1].clientX,
+                    e.touches[0].clientY - e.touches[1].clientY
+                );
+                const delta = (dist - prevDist) * 0.004;
+                scale = Math.max(0.8, Math.min(3.2, scale + delta));
+                prevDist = dist;
+                applyTransform();
+            }
+        }, { passive: true });
+
+        /* Double-tap reset */
+        let lastTap = 0;
+        layer.addEventListener('touchend', e => {
+            const now = Date.now();
+            if (now - lastTap < 300) { scale = 1; tx = 0; ty = 0; applyTransform(); }
+            lastTap = now;
+        });
+    </script>
+</body>
+
+</html>
